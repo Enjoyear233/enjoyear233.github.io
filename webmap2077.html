@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Intro to MapView - Create a 2D map - 4.15</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.15/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.15/"></script>
+
+    <script>
+      require([
+      "esri/layers/FeatureLayer",
+      "esri/Map",
+      "esri/views/MapView" ,
+      
+      "esri/widgets/ScaleBar"
+      ], function(
+        FeatureLayer,
+        Map, 
+        MapView,
+        ScaleBar,
+        ) {
+        var flayer = new FeatureLayer(
+          { url:"http://www.arcgisonline.cn/server/rest/services/Hosted/%E5%8E%9F985%E3%80%81211%E5%A4%A7%E5%AD%A6%E5%88%86%E5%B8%83%E6%83%85%E5%86%B5/FeatureServer"}
+          );
+       
+        var map = new Map({
+          basemap: "topo",
+          layers:[flayer]
+        });
+        var view1 = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 11,
+          center: [116.4, 39.9] // longitude, latitude
+        });
+        
+        var scaleBar1 = new ScaleBar({
+  view: view1,
+  style:"ruler"
+});
+// Add widget to the bottom left corner of the view
+view1.ui.add(scaleBar1, {
+  position: "bottom-left"
+  
+});
+      var coordsWidget = document.createElement("div");
+      coordsWidget.id = "coordsWidget";
+      coordsWidget.className = "esri-widget esri-component";
+      coordsWidget.style.padding = "7px 15px 5px";
+
+      view1.ui.add(coordsWidget, "bottom-right");
+       function showCoordinates(pt) {
+        var coords = "Lat/Lon " + pt.latitude.toFixed(3) + " " + pt.longitude.toFixed(3) +
+            " | Scale 1:" + Math.round(view1.scale * 1) / 1 +
+            " | Zoom " + view1.zoom;
+        coordsWidget.innerHTML = coords;
+      }
+      view1.watch("stationary", function(isStationary) {
+        showCoordinates(view1.center);
+      });
+
+      view1.on("pointer-move", function(evt) {
+        showCoordinates(view1.toMap({ x: evt.x, y: evt.y }));
+      });
+      });
+    </script>
+  </head>
+
+  <body>
+    <header style="background-color:rgba(65,45,255,125)">
+      <h1 style="color:rgb(255,255,255)">北京原985、211大学分布</h1>
+      <p style="color:rgb(215,215,255)">
+        人比人气死人，就这么点大的地方985、211大学比好几个省加起来还多。什么？反正我也考不上？那没事了
+      </p>
+    </header>
+
+    <div id="viewDiv"></div>
+  </body>
+</html>
