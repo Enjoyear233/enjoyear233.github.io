@@ -36,8 +36,7 @@
         Map, 
         MapView,
         ScaleBar,
-        ) 
-			  {
+        ) {
         var flayer = new FeatureLayer(
           { url:"http://www.arcgisonline.cn/server/rest/services/Hosted/%E5%8E%9F985%E3%80%81211%E5%A4%A7%E5%AD%A6%E5%88%86%E5%B8%83%E6%83%85%E5%86%B5/FeatureServer"}
           );
@@ -52,7 +51,9 @@
           zoom: 11,
           center: [116.4, 39.9] // longitude, latitude
         });
-        
+        view1.ui.empty("top-left");
+         var titleDiv = document.getElementById("titleDiv");
+         view1.ui.add(titleDiv, "top-left");
         var scaleBar1 = new ScaleBar({
   view: view1,
   style:"ruler"
@@ -83,16 +84,24 @@ view1.ui.add(scaleBar1, {
       });
       });
     </script>
+    <style>
+      html,
+      #titleDiv {
+        font-weight: 500;
+        font-style: normal;
+        font-size: 1.2019rem;
+        padding: 10px;
+      }
+    </style>
   </head>
 
   <body>
-    <header style="background-color:rgba(65,45,255,125)" charset="utf-8">
-      <h1 style="color:rgb(255,255,255)">北京原985、211大学分布</h1>
-      <p style="color:rgb(215,215,255)">
-        人比人气死人，就这么点大的地方985、211大学比好几个省加起来还多。什么？反正我也考不上？那没事了
-      </p>
-    </header>
+    
 
-    <div id="viewDiv"></div>
+    <div id="viewDiv">
+      <div id="titleDiv" class="esri-widget">
+          北京市原985、211大学分布
+      </div>
+    </div>
   </body>
 </html>
